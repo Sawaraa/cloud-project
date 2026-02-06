@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 232049178690-js8g1igfgqajdguah70hfkrdumabpjqi.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - openid
+              - profile
+              - email
+
+  cloud:
+    gateway:
+      routes:
+        # Маршрут для сервісу книг (Spring Task 2)
+        - id: books-service
+          uri: http://books-service:8082
+          predicates:
+            - Path=/api/book/**, /api/author/**
+
+        # Маршрут для фронтенду (щоб Gateway міг перенаправляти запити, якщо треба)
+        - id: react-frontend
+          uri: http://react-frontend:80
+          predicates:
+            - Path=/app/**
