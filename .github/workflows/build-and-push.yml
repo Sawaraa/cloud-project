@@ -1,0 +1,65 @@
+name: Build and Push to GitHub Registry
+
+on:
+  push:
+    branches: [ master, main ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME_PREFIX: ${{ vars.IMAGE_NAME_PREFIX }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_TOKEN }}
+
+      # 1. Збірка Gateway (з секретами Google)
+      - name: Build and push Gateway
+        uses: docker/build-push-action@v5
+        with:
+          context: "./Task-5--Gateway"
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_PREFIX }}/gateway:latest
+          build-args: |
+            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+            GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+
+      # 2. Збірка Spring Service
+      - name: Build and push Spring Service
+        uses: docker/build-push-action@v5
+        with:
+          context: "./Task-2--Spring"
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_PREFIX }}/books-service:latest
+
+      # 3. Збірка React Frontend
+      - name: Build and push Frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: "./Task-3--React"
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_PREFIX }}/frontend:latest
+
+      # 4. Збірка Kafka Email Service
+      - name: Build and push Kafka Service
+        uses: docker/build-push-action@v5
+        with:
+          context: "./Task-5--Kafka"
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_PREFIX }}/email-service:latest
+          build-args: |
+            MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}
+            MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
