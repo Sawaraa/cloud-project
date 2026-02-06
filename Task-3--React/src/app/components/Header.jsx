@@ -124,7 +124,7 @@ function Header({
   const [externalUser, setExternalUser] = useState(null);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/profile`, {
+    fetch(`/profile`, {
       credentials: 'include'
     })
         .then(res => {
@@ -223,7 +223,7 @@ function Header({
               )}
               {itemType === rightPanelItemTypes.LOGIN && (
                   <a
-                      href={`${process.env.REACT_APP_API_URL}/oauth2/authorization/google`}
+                      href="/oauth2/authorization/google"
                       style={{ textDecoration: 'none' }}
                   >
                   <Button
