@@ -124,7 +124,7 @@ function Header({
   const [externalUser, setExternalUser] = useState(null);
 
   useEffect(() => {
-    fetch(`profile`, {
+    fetch(`/profile`, {
       credentials: 'include'
     })
         .then(res => {
