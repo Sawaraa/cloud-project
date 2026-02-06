@@ -1,19 +1,18 @@
 # Етап 1: Збірка React додатка
-FROM node:22-alpine AS build
+FROM node:20-alpine AS build
 WORKDIR /app
 
-# Копіюємо package.json
 COPY package.json ./
 
-# Включаємо режим "legacy-peer-deps", щоб npm не сварився на старі версії бібліотек
-# Також додаємо очистку кешу
-RUN npm install --legacy-peer-deps && npm cache clean --force
+# Встановлюємо залежності та примусово додаємо ajv, якого не вистачає
+RUN npm install --legacy-peer-deps && \
+    npm install ajv --legacy-peer-deps && \
+    npm cache clean --force
 
-# Копіюємо решту файлів
 COPY . .
 
-# Збільшуємо пам'ять для збірки (іноді React цього потребує)
-ENV NODE_OPTIONS --max-old-space-size=4096
+# Виправляємо синтаксис ENV (додаємо "=")
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build
 
 # Етап 2: Роздача через Nginx
