@@ -19,7 +19,7 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: "http://35.194.43.217.nip.io"
+            allowedOrigins: "http://localhost:3050"
             allowedMethods:
               - GET
               - POST
