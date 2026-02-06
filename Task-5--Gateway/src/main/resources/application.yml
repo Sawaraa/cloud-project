@@ -17,14 +17,22 @@ spring:
   cloud:
     gateway:
       routes:
-        # Маршрут для сервісу книг (Spring Task 2)
-        - id: books-service
-          uri: http://books-service:8082
+        # 1. МАРШРУТ ДЛЯ СТАТИКИ (JS, CSS, Images)
+        - id: react-static
+          uri: http://react-frontend:80
           predicates:
-            - Path=/api/book/**, /api/author/**
+            - Path=/static/**, /favicon.ico, /manifest.json, /logo*.png
 
-        # Маршрут для фронтенду (щоб Gateway міг перенаправляти запити, якщо треба)
+        # 2. МАРШРУТ ДЛЯ ФРОНТЕНДУ
         - id: react-frontend
           uri: http://react-frontend:80
           predicates:
             - Path=/app/**
+          filters:
+            - RewritePath=/app/(?<segment>.*), /$\{segment}
+
+        # 3. МАРШРУТ ДЛЯ БЕКЕНДУ
+        - id: books-service
+          uri: http://books-service:8082
+          predicates:
+            - Path=/api/book/**, /api/author/**
