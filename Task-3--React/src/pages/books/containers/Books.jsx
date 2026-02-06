@@ -75,7 +75,7 @@ const currentItems = list.slice(startIndex, endIndex);
     const fetchBooks = async () => {
       setIsFetchingBooks(true);
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}api/book/list`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/book/list`, {
           credentials: 'include'
         });
 

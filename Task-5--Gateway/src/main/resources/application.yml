@@ -16,8 +16,22 @@ spring:
 
   cloud:
     gateway:
+      # --- ДОДАЄМО НАЛАШТУВАННЯ CORS ---
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://35.194.43.217.nip.io"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+
       routes:
-        # 1. МАРШРУТ ДЛЯ СТАТИКИ (JS, CSS, Images)
+        # 1. МАРШРУТ ДЛЯ СТАТИКИ
         - id: react-static
           uri: http://react-frontend:80
           predicates:
@@ -31,8 +45,15 @@ spring:
           filters:
             - RewritePath=/app/(?<segment>.*), /$\{segment}
 
-        # 3. МАРШРУТ ДЛЯ БЕКЕНДУ
+        # 3. МАРШРУТ ДЛЯ БЕКЕНДУ (BOOKS)
         - id: books-service
           uri: http://books-service:8082
           predicates:
             - Path=/api/book/**, /api/author/**
+
+        # --- ДОДАЄМО МАРШРУТ ДЛЯ ПРОФІЛЮ ---
+        # Оскільки фронтенд тепер робить fetch('/profile')
+        - id: user-profile
+          uri: lb://gateway # Або просто не додавати, якщо шлюз сам має цей контролер
+          predicates:
+            - Path=/profile
