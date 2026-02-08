@@ -75,7 +75,7 @@ const currentItems = list.slice(startIndex, endIndex);
     const fetchBooks = async () => {
       setIsFetchingBooks(true);
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/book/list`, {
+        const response = await fetch(`/api/book/list`, {
           credentials: 'include'
         });
 
@@ -119,7 +119,7 @@ useEffect(() => {
 
           <div style={{ marginTop: '20px' }}>
             <a
-                href={`${process.env.REACT_APP_API_URL}/oauth2/authorization/google`}
+                href={`/oauth2/authorization/google`}
                 style={{ textDecoration: 'none' }}
             >
               <Button colorVariant="header" variant="text">
@@ -139,7 +139,7 @@ useEffect(() => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/book/delete/${id}`, {
+      const response = await fetch(`/api/book/delete/${id}`, {
         method: 'DELETE',
         credentials: 'include',
       });

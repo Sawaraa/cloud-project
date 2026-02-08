@@ -55,7 +55,7 @@ function FormCreate() {
 
   const onSubmit = async (data) => {
     try {
-      const authorResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/author`, {
+      const authorResponse = await fetch(`/api/author`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: data.author }),
@@ -66,7 +66,7 @@ function FormCreate() {
 
       const authorData = await authorResponse.json();
       const createdAuthorId = authorData.id;
-      const bookResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/book`, {
+      const bookResponse = await fetch(`/api/book`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
