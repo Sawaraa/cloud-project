@@ -29,8 +29,8 @@ public class SecurityConfig {
                         .authenticationSuccessHandler((webFilterExchange, authentication) -> {
                             ServerHttpResponse response = webFilterExchange.getExchange().getResponse();
                             response.setStatusCode(HttpStatus.FOUND);
-                            // Локальний редірект на React
-                            response.getHeaders().setLocation(URI.create("http://localhost:3050/"));
+                            response.getHeaders().setLocation(URI.create("/app/"));
+
                             return response.setComplete();
                         })
                 )
@@ -41,7 +41,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3050"));
+        configuration.setAllowedOrigins(Arrays.asList(
+                "http://localhost:3050",
+                "http://35.194.43.217.nip.io"
+        ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Arrays.asList("*"));
